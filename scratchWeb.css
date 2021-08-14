@@ -1,0 +1,27 @@
+/*Only used for styling the front page and is injected through js, user written pages will use <style></style> tag*/
+.Main_text{
+    font-size: 3em;
+}
+
+.image{
+    padding: 1%
+}
+
+html, body {
+    height: 100%;
+}
+
+html {
+    display: table;
+    margin: auto;
+}
+
+body {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.description{
+    font-size: 1.5em;
+    transform: translateX(-2%);
+}
