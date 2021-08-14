@@ -50,12 +50,12 @@ async function main(){
 
     //Check to see if the project is actually shared on scratch
     
-    /*let isShared = await fetchFrom(`api.scratch.mit.edu/${urlParams.get('pid')}`);
+    let isShared = await fetchFrom(`api.scratch.mit.edu/${urlParams.get('pid')}`);
     if(!(isShared.ok)){
         //If it's not shared show error page (allowing unshared projects causes moderation issues)
         div.innerHTML = NotFoundPage;
         return;
-    }*/
+    }
 
     //Get a list of all the blocks in the project
     const blocks = project.targets[0].blocks;
