@@ -98,16 +98,19 @@ async function main(){
     }
 
     project = await fetchFrom(`projects.scratch.mit.edu/${urlParams.get('pid')}`);
-    //Later I will add a 404 page here if we cannot find the project
-
+    if(!(project.ok)){
+        //If it can't be found the load the 404 page.
+        div.innerHTML = NotFoundPage;
+        return;
+    }
     //Check to see if the project is actually shared on scratch
     
-    /*let isShared = await fetchFrom(`api.scratch.mit.edu/${urlParams.get('pid')}`);
+    let isShared = await fetchFrom(`api.scratch.mit.edu/${urlParams.get('pid')}`);
     if(!(isShared.ok)){
         //If it's not shared show error page (allowing unshared projects causes moderation issues)
         div.innerHTML = NotFoundPage;
         return;
-    }*/
+    }
 
     //Get a list of all the blocks in the project
     const blocks = project.targets[0].blocks;
