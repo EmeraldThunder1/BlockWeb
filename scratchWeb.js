@@ -85,7 +85,7 @@ async function main(){
         <div class="homepage">
         <link rel="stylesheet" type="text/css"href="scratchWeb.css">
         <div class="search-container">
-        <img src=ScratchWeb.png class="banner">
+        <img src=scratchWeb.png class="banner">
           <form>
               <input type="text" placeholder="Search for a project ID" id="search">
               <button type=button onClick="button_submit()" id="button">Submit</button>
@@ -98,16 +98,17 @@ async function main(){
     }
 
     project = await fetchFrom(`projects.scratch.mit.edu/${urlParams.get('pid')}`);
-    
     //Check to see if the project is actually shared on scratch
     
     let isShared = await fetchFrom(`api.scratch.mit.edu/projects/${urlParams.get('pid')}`);
-    if(!(isShared.ok)){
+    try{
+        let _id = isShared.id;
+    }catch(err){
         //If it's not shared show error page (allowing unshared projects causes moderation issues)
         div.innerHTML = NotFoundPage;
         return;
     }
-
+    
     //Get a list of all the blocks in the project
     const blocks = project.targets[0].blocks;
 
