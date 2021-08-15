@@ -2,23 +2,65 @@ async function fetchFrom(url){ //Raihan142857
     return await (await fetch(`https://cors.9gr.repl.co/${url}`)).json(); //9gr
 }
 
+document.head = document.head || document.getElementsByTagName('head')[0];
+
+function changeFavicon(src) { //https://stackoverflow.com/questions/260857/changing-website-favicon-dynamically
+    console.log('Changing')
+    var link = document.createElement('link'),
+    oldLink = document.getElementById('dynamic-favicon');
+    link.id = 'dynamic-favicon';
+    link.rel = 'shortcut icon';
+    link.href = src;
+    if (oldLink) {
+        document.head.removeChild(oldLink);
+    }
+    document.head.appendChild(link);
+}
+
+
+function redirect(url){
+    window.location = url;
+}
+
+function button_submit(){
+    console.log(123231);
+    let _form = document.getElementById("search");
+    console.log(_form);
+    redirect(`index.html?pid=${_form.value}`);
+    //
+}
+
+function is_acceptable_link(link){
+    let whitelist = ['assets.scratch.mit.edu', 'cdn2.scratch.mit.edu'];
+    if(whitelist.indexOf(link.split('//')[1].split('/')[0]) >= 0){
+        return true
+    }else{
+        return false
+    }
+}
+
 function renderElement(_name, perameters, element){
     const name = _name.split(" %s")[0];
-    console.log(perameters)
+    console.log(name);
     //Load the div element ready for writing
     div = document.getElementById('content');
     //Check if the tag is valid and if it is render it with all accociated perameters being met.
     if(name == "Add text"){
         div.innerHTML += `<span style="font-size:${perameters[1]}px">${perameters[0]}</span>`;
     }else if(name == "Add image"){
-        let whitelist = ['assets.scratch.mit.edu', 'cdn2.scratch.mit.edu'];
-        if(whitelist.indexOf(perameters[0].split('//')[1].split('/')[0]) >= 0){
-            div.innerHTML += `<img src="${perameters[0]}">`;
+        if(is_acceptable_link(perameters[0])){
+            div.innerHTML += `<img src=${perameters[0]}>`
         }else{
-            //I will create an error template here and render that over what has been previously rendered
+            //Load in an error templace.
         }
     }else if(name == "Break"){
         div.innerHTML += "<br>"
+    }else if(name == "Set icon"){
+        if(is_acceptable_link(perameters[0])){
+            changeFavicon(perameters[0]);
+        }else{
+            //Load in an error templace.
+        }
     }
 }
 
@@ -40,7 +82,17 @@ async function main(){
     //If there is not a url perameter then render homepage
     if(!(urlParams.get('pid'))){
         div.innerHTML = `
-        ScratchWeb homepage, improvements needed!
+        <div class="homepage">
+        <link rel="stylesheet" type="text/css"href="scratchWeb.css">
+        <div class="search-container">
+        <img src=scratchWeb.png class="banner">
+          <form>
+              <input type="text" placeholder="Search for a project ID" id="search">
+              <button type=button onClick="button_submit()" id="button">Submit</button>
+              
+          </form>
+        </div>
+        </div>
         `
         return;
     }
@@ -50,12 +102,12 @@ async function main(){
 
     //Check to see if the project is actually shared on scratch
     
-    let isShared = await fetchFrom(`api.scratch.mit.edu/${urlParams.get('pid')}`);
+    /*let isShared = await fetchFrom(`api.scratch.mit.edu/${urlParams.get('pid')}`);
     if(!(isShared.ok)){
         //If it's not shared show error page (allowing unshared projects causes moderation issues)
         div.innerHTML = NotFoundPage;
         return;
-    }
+    }*/
 
     //Get a list of all the blocks in the project
     const blocks = project.targets[0].blocks;
@@ -77,7 +129,7 @@ async function main(){
                         input_array.push(inputs[inp][1][1]);
                     }
                 }
-                renderElement(blockName, input_array, div)
+                renderElement(blockName, input_array, div);
             }
         }
     }
