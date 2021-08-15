@@ -85,7 +85,7 @@ async function main(){
         <div class="homepage">
         <link rel="stylesheet" type="text/css"href="scratchWeb.css">
         <div class="search-container">
-        <img src=scratchWeb.png class="banner">
+        <img src=ScratchWeb.png class="banner">
           <form>
               <input type="text" placeholder="Search for a project ID" id="search">
               <button type=button onClick="button_submit()" id="button">Submit</button>
