@@ -98,11 +98,6 @@ async function main(){
     }
 
     project = await fetchFrom(`projects.scratch.mit.edu/${urlParams.get('pid')}`);
-    if(!(project.ok)){
-        //If it can't be found the load the 404 page.
-        div.innerHTML = NotFoundPage;
-        return;
-    }
     //Check to see if the project is actually shared on scratch
     
     let isShared = await fetchFrom(`api.scratch.mit.edu/${urlParams.get('pid')}`);
