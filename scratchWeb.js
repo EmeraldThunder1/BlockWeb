@@ -4,6 +4,8 @@ async function fetchFrom(url){ //Raihan142857
 
 document.head = document.head || document.getElementsByTagName('head')[0];
 
+
+
 function changeFavicon(src) { //https://stackoverflow.com/questions/260857/changing-website-favicon-dynamically
     console.log('Changing')
     var link = document.createElement('link'),
@@ -39,7 +41,7 @@ function is_acceptable_link(link){
     }
 }
 
-function renderElement(_name, perameters, element){
+async function renderElement(_name, perameters, element){
     const name = _name.split(" %s")[0];
     console.log(name);
     //Load the div element ready for writing
@@ -61,6 +63,18 @@ function renderElement(_name, perameters, element){
         }else{
             //Load in an error templace.
         }
+    }else if(name == "Embed project"){
+        project = await fetchFrom(`api.scratch.mit.edu/projects/${perameters[0]}`);
+        user = project.author.username;
+        console.log(user);
+
+        div.innerHTML += `
+        <div>
+        Huge thanks to ${user} for the amazing project.
+        <br>
+        <iframe src="https://scratch.mit.edu/projects/${perameters[0]}/embed" allowtransparency="true" width="485" height="402" frameborder="0" scrolling="no" allowfullscreen></iframe>
+        </div>
+        ` 
     }
 }
 
@@ -98,17 +112,18 @@ async function main(){
     }
 
     project = await fetchFrom(`projects.scratch.mit.edu/${urlParams.get('pid')}`);
+
     //Check to see if the project is actually shared on scratch
     
     let isShared = await fetchFrom(`api.scratch.mit.edu/projects/${urlParams.get('pid')}`);
     try{
-        let _id = isShared.id;
+        let creator = isShared.author.username;
     }catch(err){
         //If it's not shared show error page (allowing unshared projects causes moderation issues)
         div.innerHTML = NotFoundPage;
         return;
     }
-    
+
     //Get a list of all the blocks in the project
     const blocks = project.targets[0].blocks;
 
