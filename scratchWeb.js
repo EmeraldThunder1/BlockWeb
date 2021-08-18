@@ -4,7 +4,7 @@ async function fetchFrom(url){ //Raihan142857
 
 document.head = document.head || document.getElementsByTagName('head')[0];
 
-
+let body_content = ``
 
 function changeFavicon(src) { //https://stackoverflow.com/questions/260857/changing-website-favicon-dynamically
     console.log('Changing')
@@ -28,8 +28,8 @@ function button_submit(){
     console.log(123231);
     let _form = document.getElementById("search");
     console.log(_form);
+    //Move to the page where the project is.
     redirect(`index.html?pid=${_form.value}`);
-    //
 }
 
 function is_acceptable_link(link){
@@ -41,22 +41,20 @@ function is_acceptable_link(link){
     }
 }
 
-async function renderElement(_name, perameters, element){
+async function renderElement(_name, perameters, _LastBlock){
     const name = _name.split(" %s")[0];
     console.log(name);
-    //Load the div element ready for writing
-    div = document.getElementById('content');
     //Check if the tag is valid and if it is render it with all accociated perameters being met.
     if(name == "Add text"){
-        div.innerHTML += `<span style="font-size:${perameters[1]}px">${perameters[0]}</span>`;
+        body_content += `<span style="font-size:${perameters[1]}px">${perameters[0]}</span>`;
     }else if(name == "Add image"){
         if(is_acceptable_link(perameters[0])){
-            div.innerHTML += `<img src=${perameters[0]}>`
+            body_content += `<img src=${perameters[0]}>`
         }else{
             //Load in an error templace.
         }
     }else if(name == "Break"){
-        div.innerHTML += "<br>"
+        body_content += "<br>"
     }else if(name == "Set icon"){
         if(is_acceptable_link(perameters[0])){
             changeFavicon(perameters[0]);
@@ -68,13 +66,19 @@ async function renderElement(_name, perameters, element){
         user = project.author.username;
         console.log(user);
 
-        div.innerHTML += `
-        <div>
+        body_content += `
+        <div class="embed-credit">
         Huge thanks to ${user} for the amazing project.
         <br>
         <iframe src="https://scratch.mit.edu/projects/${perameters[0]}/embed" allowtransparency="true" width="485" height="402" frameborder="0" scrolling="no" allowfullscreen></iframe>
         </div>
-        ` 
+        `;
+    }else if(name == "Div"){
+        body_content += `<div class="${perameters[0]}" id="${perameters[1]}">`;
+    }else if(name == "End"){
+        if(_LastBlock == "Div"){
+            body_content += "</div>";
+        }
     }
 }
 
@@ -109,20 +113,23 @@ async function main(){
         </div>
         `
         return;
+    }else{
+        //A powered by scratch web image should be rendered in the top right hand corner.
     }
 
     project = await fetchFrom(`projects.scratch.mit.edu/${urlParams.get('pid')}`);
 
     //Check to see if the project is actually shared on scratch
     
-    let isShared = await fetchFrom(`api.scratch.mit.edu/projects/${urlParams.get('pid')}`);
+    let scratchApiProject = await fetchFrom(`api.scratch.mit.edu/projects/${urlParams.get('pid')}`);
     try{
-        let creator = isShared.author.username;
+        let creator = scratchApiProject.author.username;
     }catch(err){
         //If it's not shared show error page (allowing unshared projects causes moderation issues)
         div.innerHTML = NotFoundPage;
         return;
     }
+    document.title = scratchApiProject.title;
 
     //Get a list of all the blocks in the project
     const blocks = project.targets[0].blocks;
@@ -137,17 +144,21 @@ async function main(){
                 //Pasrse out the inputs and the name of the block
                 let inputs = blocks[prop].inputs;
                 let blockName = blocks[prop].mutation.proccode;
-                lastBlock = blockName
+                if(["Div", "Span", "List"].includes(blockName.split(" %s")[0])){
+                    lastBlock = blockName.split(" %s")[0];
+                }
                 let input_array = []
                 for(let inp in inputs){
                     if(Object.prototype.hasOwnProperty.call(inputs, inp)){
                         input_array.push(inputs[inp][1][1]);
                     }
                 }
-                renderElement(blockName, input_array, div);
+                renderElement(blockName, input_array, lastBlock);
             }
         }
     }
+
+    div.innerHTML = body_content;
 }
 
 onload = main();
