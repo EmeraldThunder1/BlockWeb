@@ -16,7 +16,7 @@ The site cannot be edited globally as raw html.
 
 If you have any questions contact me on [my scratch profile](https://scratch.mit.edu/users/-EmeraldThunder-)
 
-Also please note this is far from complete I have a huge list of features (and a few bug fixes) that need implementing. I am working on all of this so just be patient.
+Also please note this is far from complete. I have a huge list of features (and a few bug fixes) that need implementing. I am working on all of this so please be patient.
 
 The site can be accessed from [here](https://emeraldthunder1.github.io/ScratchWeb/)
 
