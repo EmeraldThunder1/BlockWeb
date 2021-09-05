@@ -1,0 +1,48 @@
+.Main_text{
+    font-size: 3em;
+}
+
+.image{
+    padding: 1%
+}
+
+html, body {
+    height: 100%;
+}
+
+html {
+    display: table;
+    margin: auto;
+}
+
+body {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.description{
+    font-size: 1.5em;
+    transform: translateX(-2%);
+}
+
+
+.homepage input[type=text], .homepage button[type=button] {
+    padding: 6px;
+    border: none;
+    margin-top: 8px;
+    outline: none !important;
+    border:1px solid;
+    font-size: 17px;
+    border-color: #4e5a65;
+}
+.homepage input[type=text]:focus{
+    border-color: #000000;
+}
+.homepage button:hover{
+    cursor: pointer;
+}
+
+.banner{
+    margin: 10px auto;
+    vertical-align: middle;
+}
