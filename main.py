@@ -121,7 +121,7 @@ def loadBlockMarkup(blockname, blockInputs, stack):
     elif cleanName == 'italics':
         return f'<i>{cleanInputs[0]}</i>', False, stack
     elif cleanName == 'underline':
-        return f'<u>{cleanInputs[0]}</i>', False, stack
+        return f'<u>{cleanInputs[0]}</u>', False, stack
 
     else:
         return f'<b>{cleanName.capitalize()} is not an acceptable block.</b>', False, stack
