@@ -108,6 +108,23 @@ def loadBlockMarkup(blockname, blockInputs, stack):
         return '<ul>', False, stack
     elif cleanName == 'ordered list':
         return f'<ol start="{cleanInputs[0]}">', False, stack
+
+    elif cleanName == 'small':
+        return f'<small>{cleanInputs[0]}</small>', False, stack
+    
+    elif cleanName == 'bold':
+        return f'<b>{cleanInputs[0]}</b>', False, stack
+    
+    elif cleanName == 'emphasis':
+        return f'<em>{cleanInputs[0]}</em>', False, stack
+
+    elif cleanName == 'italics':
+        return f'<i>{cleanInputs[0]}</i>', False, stack
+    elif cleanName == 'underline':
+        return f'<u>{cleanInputs[0]}</i>', False, stack
+
+    else:
+        return f'<b>{cleanName.capitalize()} is not an acceptable block.</b>', False, stack
     
     
 
