@@ -209,4 +209,4 @@ def projectPage(id):
 
 # Run the app if the file is being run directly.
 if __name__ == '__main__':
-    app.run(host='localhost')
+    app.run(host='0.0.0.0')
