@@ -1,7 +1,6 @@
 # Import libraries for use in the code
 from flask import Flask, render_template
 import requests 
-import sys
 import re
 
 
@@ -38,7 +37,7 @@ def loadBlockMarkup(blockname, blockInputs, stack):
     if cleanName == 'set icon':
         if isWhitelisted(cleanInputs[0]):
             # Return the JavaScript function to change the favicon
-            return f'<script>changeFavicon(\'{cleanInputs[0]}\');</script>', False, stack
+            return f'<script>changeFavicon("{cleanInputs[0]}");</script>', False, stack
     elif cleanName == 'add text':
         # Return a span with the body of the text inside it
         return f'<span style="font-size:{cleanInputs[1]}px">{cleanInputs[0]}</span>', False, stack
@@ -122,6 +121,8 @@ def loadBlockMarkup(blockname, blockInputs, stack):
         return f'<i>{cleanInputs[0]}</i>', False, stack
     elif cleanName == 'underline':
         return f'<u>{cleanInputs[0]}</u>', False, stack
+    elif cleanName == 'centre':
+        return f'<center>{cleanInputs[0]}</center>', False, stack
 
     else:
         return f'<b>{cleanName.capitalize()} is not an acceptable block.</b>', False, stack
@@ -182,7 +183,6 @@ def LoadProject(id):
 
         markup, css, nest_stack = loadBlockMarkup(this_block['name'], inputArray, nest_stack)
 
-        print(markup)
 
         if not str(markup) == 'None':
             if not css:
@@ -196,8 +196,9 @@ def LoadProject(id):
         if next_block == None:
             final_block = True
 
-
-    return RAW_HTML + f'<script>document.title="{shared.json()["title"]}";</script><style>{RAW_CSS}</style>'
+    output = RAW_HTML + f'<script>document.title="{shared.json()["title"]}";</script><style>{RAW_CSS}</style>'
+    print(output)
+    return output
     
 # Route the project to the correct URL.
 @app.route('/projects/<id>/')
